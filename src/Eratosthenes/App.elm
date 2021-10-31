@@ -2,6 +2,7 @@ module Eratosthenes.App exposing (main)
 
 import Browser
 import Browser.Events exposing (onResize)
+import Dict
 import Eratosthenes.Sieve as Sieve
 import Eratosthenes.Types exposing (..)
 import Eratosthenes.View as View
@@ -41,6 +42,7 @@ init flags =
       , windowHeight = round windowH
       , wheel = Sieve.wheel2357Init
       , sieve = Sieve.sieve Sieve.wheel2357Init
+      , compositeMap = Dict.empty
       , primes = []
       }
     , Cmd.none
