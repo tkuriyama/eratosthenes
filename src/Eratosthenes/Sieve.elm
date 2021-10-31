@@ -20,7 +20,7 @@ The idea is to store the sieve's composite generators in a Dict, and update them
 
     import Generator as G
 
-    Wheel2Init |> sieve
+    wheel2Init |> sieve
     |> G.take 10
     --> [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ]
 

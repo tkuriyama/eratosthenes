@@ -1,6 +1,6 @@
 {
     "root": "../src",
-    "tests": [ "Sieve"
+    "tests": [ "Eratosthenes.Sieve"
              ],
     "elmTest": "/usr/local/bin/elm-test"
 }
