@@ -14,6 +14,16 @@ import Generator as G
 --------------------------------------------------------------------------------
 
 
+type Nat
+    = Prime Int
+    | Composite Int
+
+
+
+---
+--------------------------------------------------------------------------------
+
+
 {-| Primes by an incremental Sieve of Eratosthenes.
 
 The idea is to store the sieve's composite generators in a Dict, and update them just-in-time as more and more candidates are explored.
@@ -21,12 +31,12 @@ The idea is to store the sieve's composite generators in a Dict, and update them
     import Generator as G
 
     wheel2Init |> sieve
-    |> G.take 10
-    --> [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ]
+    |> G.take 5
+    --> [ Prime 2, Prime 3, Prime 5, Prime 7, Composite 9]
 
     wheel2357Init |> sieve
     |> G.take 10
-     --> [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ]
+     --> [ Prime 2, Prime 3, Prime 5, Prime 7, Prime 11, Prime 13, Prime 17, Prime 19, Prime 23, Prime 29 ]
 
 See section 3 of <https://www.cs.hmc.edu/~oneill/papers/Sieve-JFP.pdf>
 
@@ -41,7 +51,7 @@ type alias GeneratorDict b =
 
 sieve :
     ( List Int, Int, G.Generator Int b )
-    -> G.Generator Int ( SieveState b, List Int )
+    -> G.Generator Nat ( SieveState b, List Nat )
 sieve ( primes, lastPrime, candidateWheel ) =
     let
         state0 =
@@ -49,10 +59,10 @@ sieve ( primes, lastPrime, candidateWheel ) =
             , candidateWheel
             )
     in
-    G.prefix primes <| G.init state0 sieveNext
+    G.prefix (List.map Prime primes) <| G.init state0 sieveNext
 
 
-sieveNext : SieveState b -> Maybe ( Int, SieveState b )
+sieveNext : SieveState b -> Maybe ( Nat, SieveState b )
 sieveNext ( map, wheel ) =
     let
         ( guess, wheel_ ) =
@@ -61,11 +71,11 @@ sieveNext ( map, wheel ) =
     case Dict.get guess map of
         Nothing ->
             Just
-                ( guess, ( insertNext guess wheel_ map, wheel_ ) )
+                ( Prime guess, ( insertNext guess wheel_ map, wheel_ ) )
 
         Just composites ->
-            sieveNext
-                ( updateMap guess composites map, wheel_ )
+            Just
+                ( Composite guess, ( updateMap guess composites map, wheel_ ) )
 
 
 insertNext : Int -> G.Generator Int b -> GeneratorDict b -> GeneratorDict b

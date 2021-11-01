@@ -22,12 +22,12 @@ type alias Model =
     , wheel : WheelTriple
     , sieve : PrimeGenerator
     , compositeMap : Dict.Dict Int WheelState
-    , primes : List Int
+    , nats : List Nat
     }
 
 
 type alias PrimeGenerator =
-    G.Generator Int ( Sieve.SieveState WheelState, List Int )
+    G.Generator Nat ( Sieve.SieveState WheelState, List Nat )
 
 
 type alias WheelTriple =
@@ -39,6 +39,10 @@ type alias WheelTriple =
 
 type alias WheelState =
     ( ( List Int, Int, List Int ), Int )
+
+
+type alias Nat =
+    Sieve.Nat
 
 
 

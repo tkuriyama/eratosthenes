@@ -17,13 +17,13 @@ import Generator as G
 
 spec1 : Test.Test
 spec1 =
-    Test.test "Module VerifyExamples: \n\n    wheel2Init |> sieve\n    |> G.take 10\n    --> [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ]" <|
+    Test.test "Module VerifyExamples: \n\n    wheel2Init |> sieve\n    |> G.take 5\n    --> [ Prime 2, Prime 3, Prime 5, Prime 7, Composite 9]" <|
         \() ->
             Expect.equal
                 (
                 wheel2Init |> sieve
-                |> G.take 10
+                |> G.take 5
                 )
                 (
-                [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ]
+                [ Prime 2, Prime 3, Prime 5, Prime 7, Composite 9]
                 )

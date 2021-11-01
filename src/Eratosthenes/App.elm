@@ -43,7 +43,7 @@ init flags =
       , wheel = Sieve.wheel2357Init
       , sieve = Sieve.sieve Sieve.wheel2357Init
       , compositeMap = Dict.empty
-      , primes = []
+      , nats = []
       }
     , Cmd.none
     )
@@ -66,12 +66,12 @@ update msg model =
             ( advanceSieve n model, Cmd.none )
 
         ResetSieve ->
-            ( { model | sieve = Sieve.sieve model.wheel, primes = [] }
+            ( { model | sieve = Sieve.sieve model.wheel, nats = [] }
             , Cmd.none
             )
 
         ChangeWheel wheel ->
-            ( { model | sieve = Sieve.sieve wheel, wheel = wheel, primes = [] }
+            ( { model | sieve = Sieve.sieve wheel, wheel = wheel, nats = [] }
             , Cmd.none
             )
 
@@ -79,12 +79,12 @@ update msg model =
 advanceSieve : Int -> Model -> Model
 advanceSieve n model =
     let
-        ( ps, sieve_ ) =
+        ( ns, sieve_ ) =
             G.advance n model.sieve
     in
     { model
         | sieve = sieve_
-        , primes = model.primes ++ ps
+        , nats = model.nats ++ ns
     }
 
 
