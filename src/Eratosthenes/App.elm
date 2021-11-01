@@ -42,7 +42,8 @@ init flags =
       , windowHeight = round windowH
       , wheel = Sieve.wheel2357Init
       , sieve = Sieve.sieve Sieve.wheel2357Init
-      , nats = []
+      , prevNats = []
+      , newNats = []
       }
     , Cmd.none
     )
@@ -65,12 +66,21 @@ update msg model =
             ( advanceSieve n model, Cmd.none )
 
         ResetSieve ->
-            ( { model | sieve = Sieve.sieve model.wheel, nats = [] }
+            ( { model
+                | sieve = Sieve.sieve model.wheel
+                , prevNats = []
+                , newNats = []
+              }
             , Cmd.none
             )
 
         ChangeWheel wheel ->
-            ( { model | sieve = Sieve.sieve wheel, wheel = wheel, nats = [] }
+            ( { model
+                | sieve = Sieve.sieve wheel
+                , wheel = wheel
+                , prevNats = []
+                , newNats = []
+              }
             , Cmd.none
             )
 
@@ -83,7 +93,8 @@ advanceSieve n model =
     in
     { model
         | sieve = sieve_
-        , nats = model.nats ++ ns
+        , prevNats = model.prevNats ++ model.newNats
+        , newNats = ns
     }
 
 
