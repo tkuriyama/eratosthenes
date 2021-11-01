@@ -21,13 +21,16 @@ type alias Model =
     , windowHeight : Int
     , wheel : WheelTriple
     , sieve : PrimeGenerator
-    , compositeMap : Dict.Dict Int WheelState
     , nats : List Nat
     }
 
 
 type alias PrimeGenerator =
-    G.Generator Nat ( Sieve.SieveState WheelState, List Nat )
+    G.Generator Nat ( SieveState WheelState, List Nat )
+
+
+type alias SieveState b =
+    Sieve.SieveState b
 
 
 type alias WheelTriple =

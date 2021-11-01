@@ -42,7 +42,6 @@ init flags =
       , windowHeight = round windowH
       , wheel = Sieve.wheel2357Init
       , sieve = Sieve.sieve Sieve.wheel2357Init
-      , compositeMap = Dict.empty
       , nats = []
       }
     , Cmd.none
