@@ -6,7 +6,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
-import Eratosthenes.Sieve exposing (Nat(..))
+import Eratosthenes.Sieve as Sieve exposing (Nat(..))
 import Eratosthenes.Types exposing (..)
 import Generator as G
 import Html exposing (Html)
@@ -30,7 +30,7 @@ view model =
             ]
             [ titleView
             , noteView
-            , controlView
+            , controlView model.wheel
             , nextView model.sieve
             , E.row
                 [ E.width E.fill
@@ -79,8 +79,8 @@ noteView =
 --------------------------------------------------------------------------------
 
 
-controlView : E.Element Msg
-controlView =
+controlView : WheelTriple -> E.Element Msg
+controlView selectedWheel =
     E.row
         [ E.padding 10
         , E.spacing 10
@@ -88,7 +88,19 @@ controlView =
         [ clearButton
         , advanceButton 1 "Advance 1"
         , advanceButton 10 "Advance 10"
+        , wheels selectedWheel
         ]
+
+
+wheels : WheelTriple -> E.Element Msg
+wheels selected =
+    choice
+        ""
+        ChangeWheel
+        [ Input.option Sieve.wheel2Init <| E.text "Wheel 2"
+        , Input.option Sieve.wheel2357Init <| E.text "Wheel 2357"
+        ]
+        selected
 
 
 clearButton : E.Element Msg
@@ -181,8 +193,39 @@ mapView map =
 
 
 --------------------------------------------------------------------------------
+-- Helpers
 
 
 highlightColor : E.Color
 highlightColor =
     E.rgb255 172 250 47
+
+
+choice : String -> (a -> msg) -> List (Input.Option a msg) -> a -> E.Element msg
+choice title msg options selected =
+    Input.radioRow
+        [ E.padding 10
+        , E.spacing 10
+        ]
+        { onChange = msg
+        , selected = Just selected
+        , label = titleLabel title
+        , options = options
+        }
+
+
+titleLabel : String -> Input.Label msg
+titleLabel s =
+    Input.labelLeft
+        [ Font.heavy
+        , E.centerX
+        ]
+        (E.text s)
+
+
+titleLabelLight : String -> Input.Label msg
+titleLabelLight s =
+    Input.labelLeft
+        [ E.centerX
+        ]
+        (E.text s)
