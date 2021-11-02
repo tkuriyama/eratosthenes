@@ -281,7 +281,7 @@ tableHeaders =
             (E.text "Composite")
         , E.el
             (cellStyle 6 (Just <| E.rgb255 220 220 220))
-            (E.text "Prime Factors Observed")
+            (E.text "Prime x Sieve Multipler")
         ]
 
 
@@ -331,8 +331,19 @@ getFactor composite =
     G.inspect
         >> Maybe.map (\( ( _, _, _ ), x ) -> x)
         >> Maybe.withDefault 0
-        >> (\n -> composite // n)
-        >> String.fromInt
+        >> showFactors composite
+
+
+showFactors : Int -> Int -> String
+showFactors composite n =
+    let
+        source =
+            composite // n |> String.fromInt
+
+        multiplier =
+            n |> String.fromInt
+    in
+    source ++ " x " ++ multiplier
 
 
 cellStyle : Int -> Maybe E.Color -> List (E.Attribute msg)
