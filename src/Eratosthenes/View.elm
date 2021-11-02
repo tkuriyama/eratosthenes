@@ -23,7 +23,7 @@ view model =
         [ E.width (E.px model.windowWidth)
         , Font.family [ Font.typeface "Consolas", Font.sansSerif, Font.monospace ]
         , Font.size 18
-        , E.padding 20
+        , E.paddingXY 60 20
         ]
         (E.column
             [ E.width E.fill
@@ -41,6 +41,7 @@ view model =
                 [ E.el
                     [ E.width <| E.fillPortion 1
                     , E.alignTop
+                    , E.height E.fill
                     ]
                     (natsView model.prevNats model.newNats)
                 , E.el
@@ -62,18 +63,19 @@ columnTitleView sieve =
         [ E.width E.fill
         , E.paddingEach { top = 20, bottom = 5, left = 10, right = 10 }
         , E.spacing 20
+        , Font.size 20
         ]
         [ E.paragraph
             [ E.width <| E.fillPortion 1 ]
             [ E.el
-                [ Font.underline ]
+                [ Font.bold ]
                 (E.text <| "Verified Naturals")
             , E.el []
                 (E.text <| nextUp sieve)
             ]
         , E.el
             [ E.width <| E.fillPortion 1
-            , Font.underline
+            , Font.bold
             ]
             (E.text "Map of Composites")
         ]
@@ -135,6 +137,7 @@ controlView selectedWheel =
     E.row
         [ E.padding 10
         , E.spacing 10
+        , E.centerX
         ]
         [ clearButton
         , advanceButton 1 "Advance 1"

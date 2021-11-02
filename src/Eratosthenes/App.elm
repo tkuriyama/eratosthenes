@@ -41,8 +41,8 @@ init flags =
     in
     ( { windowWidth = round windowW
       , windowHeight = round windowH
-      , wheel = Sieve.wheel2357Init
-      , sieve = Sieve.sieve Sieve.wheel2357Init
+      , wheel = Sieve.wheel2Init
+      , sieve = Sieve.sieve Sieve.wheel2Init
       , prevMap = Dict.empty
       , prevNats = []
       , newNats = []
