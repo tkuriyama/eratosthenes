@@ -21,6 +21,7 @@ type alias Model =
     , windowHeight : Int
     , wheel : WheelTriple
     , sieve : PrimeGenerator
+    , prevMap : Sieve.GeneratorDict WheelState
     , prevNats : List Sieve.Nat
     , newNats : List Sieve.Nat
     }

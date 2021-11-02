@@ -5,6 +5,7 @@ import Browser.Events exposing (onResize)
 import Dict
 import Eratosthenes.Sieve as Sieve
 import Eratosthenes.Types exposing (..)
+import Eratosthenes.Utils as Utils
 import Eratosthenes.View as View
 import Generator as G
 
@@ -42,6 +43,7 @@ init flags =
       , windowHeight = round windowH
       , wheel = Sieve.wheel2357Init
       , sieve = Sieve.sieve Sieve.wheel2357Init
+      , prevMap = Dict.empty
       , prevNats = []
       , newNats = []
       }
@@ -68,6 +70,7 @@ update msg model =
         ResetSieve ->
             ( { model
                 | sieve = Sieve.sieve model.wheel
+                , prevMap = Dict.empty
                 , prevNats = []
                 , newNats = []
               }
@@ -78,6 +81,7 @@ update msg model =
             ( { model
                 | sieve = Sieve.sieve wheel
                 , wheel = wheel
+                , prevMap = Dict.empty
                 , prevNats = []
                 , newNats = []
               }
@@ -93,6 +97,7 @@ advanceSieve n model =
     in
     { model
         | sieve = sieve_
+        , prevMap = Utils.getMap model.sieve
         , prevNats = model.prevNats ++ model.newNats
         , newNats = ns
     }

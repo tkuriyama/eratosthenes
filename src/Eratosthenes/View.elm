@@ -8,6 +8,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Eratosthenes.Sieve as Sieve exposing (Nat(..))
 import Eratosthenes.Types exposing (..)
+import Eratosthenes.Utils as Utils
 import Generator as G
 import Html exposing (Html)
 
@@ -31,7 +32,7 @@ view model =
             [ titleView
             , noteView
             , controlView model.wheel
-            , nextView model.sieve
+            , columnTitleView model.sieve
             , E.row
                 [ E.width E.fill
                 , E.padding 10
@@ -42,10 +43,56 @@ view model =
                     (natsView model.prevNats model.newNats)
                 , E.el
                     [ E.width <| E.fillPortion 1 ]
-                    (mapView <| G.inspect model.sieve)
+                    (mapView
+                        (Utils.getMap model.sieve)
+                        model.prevMap
+                    )
                 ]
             ]
         )
+
+
+columnTitleView : PrimeGenerator -> E.Element msg
+columnTitleView sieve =
+    E.row
+        [ E.width E.fill
+        , E.paddingEach { top = 20, bottom = 5, left = 10, right = 10 }
+        , E.spacing 20
+        ]
+        [ E.paragraph
+            [ E.width <| E.fillPortion 1 ]
+            [ E.el
+                [ Font.underline ]
+                (E.text <| "Verified Naturals")
+            , E.el []
+                (E.text <| nextUp sieve)
+            ]
+        , E.el
+            [ E.width <| E.fillPortion 1
+            , Font.underline
+            ]
+            (E.text "Map of Composites")
+        ]
+
+
+nextUp : PrimeGenerator -> String
+nextUp generator =
+    case G.head generator of
+        Nothing ->
+            ""
+
+        Just n ->
+            " (Next Candidate: " ++ String.fromInt (natToInt n) ++ ")"
+
+
+natToInt : Sieve.Nat -> Int
+natToInt n =
+    case n of
+        Prime p ->
+            p
+
+        Composite c ->
+            c
 
 
 
@@ -134,15 +181,6 @@ advanceButton n title =
 --------------------------------------------------------------------------------
 
 
-nextView : PrimeGenerator -> E.Element msg
-nextView generator =
-    E.none
-
-
-
---------------------------------------------------------------------------------
-
-
 natsView : List Nat -> List Nat -> E.Element msg
 natsView prevNats newNats =
     E.wrappedRow
@@ -186,14 +224,56 @@ showNat new n =
 --------------------------------------------------------------------------------
 
 
-mapView : Maybe ( SieveState WheelState, List Nat ) -> E.Element msg
-mapView map =
-    E.none
+mapView :
+    Sieve.GeneratorDict WheelState
+    -> Sieve.GeneratorDict WheelState
+    -> E.Element msg
+mapView map prevMap =
+    E.column
+        [ E.width E.fill
+        ]
+        [ tableHeaders
+
+        --            :: List.map showRow map.toList
+        ]
+
+
+tableHeaders : E.Element msg
+tableHeaders =
+    E.row
+        [ E.width E.fill
+        ]
+        [ E.el
+            (cellStyle 1 (Just <| E.rgb255 220 220 220))
+            (E.text "Composite")
+        , E.el
+            (cellStyle 6 (Just <| E.rgb255 220 220 220))
+            (E.text "Prime Factors Observed")
+        ]
+
+
+cellStyle : Int -> Maybe E.Color -> List (E.Attribute msg)
+cellStyle fill bgColor =
+    let
+        bg =
+            case bgColor of
+                Just color ->
+                    [ Background.color color ]
+
+                Nothing ->
+                    []
+    in
+    [ E.width <| E.fillPortion fill
+    , E.paddingXY 5 3
+    , Border.width 1
+    , Border.color <| E.rgb255 125 125 125
+    ]
+        ++ bg
 
 
 
 --------------------------------------------------------------------------------
--- Helpers
+-- helpers
 
 
 highlightColor : E.Color
