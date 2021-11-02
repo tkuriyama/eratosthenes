@@ -112,7 +112,33 @@ titleView =
         [ E.el
             [ Font.size 24
             ]
-            (E.text "Sieve of Eratosthenes")
+            (E.el
+                [ E.onRight links
+                ]
+                (E.text "Sieve of Eratosthenes")
+            )
+        ]
+
+
+links : E.Element msg
+links =
+    E.row
+        [ Font.size 16
+        , E.paddingXY 30 0
+        , E.alignBottom
+        , E.spacing 10
+        , Font.color <| E.rgb255 173 216 230
+        ]
+        [ E.link
+            [ Font.underline ]
+            { url = "https://tkuriyama.github.io/general/2021/10/30/eratosthenes-elm-generator.html"
+            , label = E.text "About"
+            }
+        , E.link
+            [ Font.underline ]
+            { url = "https://github.com/tkuriyama/eratosthenes"
+            , label = E.text "Code"
+            }
         ]
 
 
@@ -122,9 +148,10 @@ noteView =
         [ E.centerX
         , E.paddingEach { top = 5, bottom = 10, right = 0, left = 0 }
         ]
-        [ E.el
+        [ E.paragraph
             [ Font.size 14 ]
-            (E.text "Visualizing the step-by-step progress of an iterative algorithm for the sieve. Detailed explanation here.")
+            [ E.text "Visualizing the step-by-step progress of an efficient, iterative algorithm for the sieve."
+            ]
         ]
 
 
