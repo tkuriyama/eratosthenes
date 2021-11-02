@@ -323,6 +323,7 @@ cellStyle fill bgColor =
     , E.paddingXY 5 3
     , Border.width 1
     , Border.color <| E.rgb255 125 125 125
+    , Border.dotted
     ]
         ++ bg
 
