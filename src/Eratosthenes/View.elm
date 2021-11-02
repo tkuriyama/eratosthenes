@@ -23,7 +23,7 @@ view model =
         [ E.width (E.px model.windowWidth)
         , Font.family [ Font.typeface "Consolas", Font.sansSerif, Font.monospace ]
         , Font.size 18
-        , E.padding 5
+        , E.padding 20
         ]
         (E.column
             [ E.width E.fill
@@ -39,10 +39,14 @@ view model =
                 , E.spacing 20
                 ]
                 [ E.el
-                    [ E.width <| E.fillPortion 1 ]
+                    [ E.width <| E.fillPortion 1
+                    , E.alignTop
+                    ]
                     (natsView model.prevNats model.newNats)
                 , E.el
-                    [ E.width <| E.fillPortion 1 ]
+                    [ E.width <| E.fillPortion 1
+                    , E.alignTop
+                    ]
                     (mapView
                         (Utils.getMap model.sieve)
                         model.prevMap
@@ -232,10 +236,9 @@ mapView map prevMap =
     E.column
         [ E.width E.fill
         ]
-        [ tableHeaders
-
-        --            :: List.map showRow map.toList
-        ]
+        (tableHeaders
+            :: List.map (showRow prevMap) (Dict.toList map)
+        )
 
 
 tableHeaders : E.Element msg
@@ -250,6 +253,56 @@ tableHeaders =
             (cellStyle 6 (Just <| E.rgb255 220 220 220))
             (E.text "Prime Factors Observed")
         ]
+
+
+showRow :
+    Sieve.GeneratorDict WheelState
+    -> ( Int, List (G.Generator Int WheelState) )
+    -> E.Element msg
+showRow prevMap ( key, generators ) =
+    let
+        ( keyBackground, valueBackground ) =
+            case Dict.member key prevMap of
+                True ->
+                    let
+                        oldCount =
+                            Dict.get key prevMap
+                                |> Maybe.map List.length
+                                |> Maybe.withDefault 0
+                    in
+                    case List.length generators == oldCount of
+                        True ->
+                            ( Nothing, Nothing )
+
+                        False ->
+                            ( Nothing, Just highlightColor )
+
+                False ->
+                    ( Just highlightColor, Just highlightColor )
+    in
+    E.row
+        [ E.width E.fill ]
+        [ E.el
+            (cellStyle 1 keyBackground)
+            (E.text <| String.fromInt key)
+        , E.el
+            (cellStyle 6 valueBackground)
+            (E.text <| getFactors key generators)
+        ]
+
+
+getFactors : Int -> List (G.Generator Int WheelState) -> String
+getFactors composite =
+    List.map (getFactor composite) >> List.intersperse ", " >> String.concat
+
+
+getFactor : Int -> G.Generator Int WheelState -> String
+getFactor composite =
+    G.inspect
+        >> Maybe.map (\( ( _, _, _ ), x ) -> x)
+        >> Maybe.withDefault 0
+        >> (\n -> composite // n)
+        >> String.fromInt
 
 
 cellStyle : Int -> Maybe E.Color -> List (E.Attribute msg)
