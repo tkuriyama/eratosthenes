@@ -281,7 +281,7 @@ tableHeaders =
             (E.text "Composite")
         , E.el
             (cellStyle 6 (Just <| E.rgb255 220 220 220))
-            (E.text "Prime x Sieve Multipler")
+            (E.text "Prime x Sieve Multiplier")
         ]
 
 
